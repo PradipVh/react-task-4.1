@@ -1,0 +1,76 @@
+import React, { useState } from 'react';
+import{PieChart} from  "react-minimal-pie-chart";
+function ChartFormation() {
+  const [box1Value, setBox1Value] = useState("");
+  const [box2Value, setBox2Value] = useState("");
+  const [chartData, setChartData] = useState('');
+  const [validationMessage, setValidationMessage] = useState("");
+
+  const handleChangeBox1 = (e) => {
+    const value = e.target.value;
+    if (value <= 100) {
+      setBox1Value(value);
+      setBox2Value(100 - value);
+      setValidationMessage("");
+    } else {
+      setValidationMessage("incorrect value");
+    }
+  }
+
+  const handleChangeBox2 = (e) => {
+    const value = e.target.value;
+    if (value <= 100) {
+      setBox2Value(value);
+      setBox1Value(100 - value);
+      setValidationMessage("");
+    } else {
+      setValidationMessage("incorrect value");
+    }
+  }
+
+  const handleCreateChart = (e) => {
+    e.preventDefault();
+
+    const data = {
+      labels: ['Box1', 'Box2'],
+      datasets: [
+        {
+          data: [box1Value, box2Value],
+          backgroundColor: ['#000', '#eee'],
+        },
+      ],
+    };
+
+    setChartData(data);
+  }
+
+  return (
+    <div className='container'>
+      <div className='col-md-12'>
+        <div className='row'>
+          <div className='form-group col-md-3'>
+            <label htmlFor="box1">Box1</label>
+            <input value={box1Value} onChange={handleChangeBox1} className='form-control'id='box1' />
+          </div>
+           <div className='form-group col-md-3'>
+            <label htmlFor="box2">Box2</label>
+            <input onChange={handleChangeBox2} value={box2Value} className='form-control' id='box2' />
+          </div>
+          <div style={{marginTop:"31px"}} className='form-group col-md-3'>
+            <button onClick={handleCreateChart} className='btn btn-success rounded form-control' >Create-Chart</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        {validationMessage && <p className="text-danger mt-3">{validationMessage}</p>}
+      </div>
+      {chartData && (
+        <div style={{ width: '300px', height: '300px' }}>
+          <PieChart data={chartData} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default ChartFormation;
